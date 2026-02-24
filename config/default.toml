@@ -10,8 +10,10 @@ fetch_limit = 100
 include_recurring = false
 min_liquidity = 0
 tag_whitelist = []
+title_keywords = ["hit $", "above $", "below $", "market cap", "FDV", "price of"]
 
 [alerts]
+enabled_alerts = ["new_market"]
 closing_alert_hours = 2.0
 price_threshold = 0.15
 price_lookback_minutes = 60

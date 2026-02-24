@@ -16,10 +16,15 @@ class GammaConfig:
     include_recurring: bool = False
     min_liquidity: float = 0
     tag_whitelist: list[str] = field(default_factory=list)
+    title_keywords: list[str] = field(default_factory=list)
+
+
+_ALL_ALERT_TYPES = ["new_market", "closing_soon", "resolved", "price_move", "volume_spike"]
 
 
 @dataclass
 class AlertsConfig:
+    enabled_alerts: list[str] = field(default_factory=lambda: list(_ALL_ALERT_TYPES))
     closing_alert_hours: float = 2.0
     price_threshold: float = 0.15
     price_lookback_minutes: int = 60

@@ -40,33 +40,41 @@ class Monitor:
         for e in closed_events:
             all_events.setdefault(e["id"], e)
 
+        enabled = set(self._cfg.alerts.enabled_alerts)
+
         for event in all_events.values():
             event_id = event["id"]
 
             # New market detection
-            alert = self._check_new_market(event, is_first_run)
-            if alert:
-                alerts.append(alert)
+            if "new_market" in enabled:
+                alert = self._check_new_market(event, is_first_run)
+                if alert:
+                    alerts.append(alert)
+            else:
+                # Still mark seen for other detectors
+                if not self._store.is_seen(event_id):
+                    self._store.mark_seen(event_id)
 
             # Closing soon (only active)
-            if not _is_closed(event):
+            if "closing_soon" in enabled and not _is_closed(event):
                 alert = self._check_closing_soon(event)
                 if alert:
                     alerts.append(alert)
 
             # Resolved
-            alert = self._check_resolved(event)
-            if alert:
-                alerts.append(alert)
+            if "resolved" in enabled:
+                alert = self._check_resolved(event)
+                if alert:
+                    alerts.append(alert)
 
             # Price movement (only active)
-            if not _is_closed(event):
+            if "price_move" in enabled and not _is_closed(event):
                 alert = self._check_price_move(event)
                 if alert:
                     alerts.append(alert)
 
             # Volume spike (only active)
-            if not _is_closed(event):
+            if "volume_spike" in enabled and not _is_closed(event):
                 alert = self._check_volume_spike(event)
                 if alert:
                     alerts.append(alert)
@@ -129,6 +137,9 @@ class Monitor:
 
         if cfg.min_liquidity > 0:
             events = [e for e in events if _get_liquidity(e) >= cfg.min_liquidity]
+
+        if cfg.title_keywords:
+            events = [e for e in events if _title_matches(e, cfg.title_keywords)]
 
         return events
 
@@ -291,6 +302,11 @@ def _has_tags(event: dict, whitelist: list[str]) -> bool:
         else:
             labels.add(str(tag).lower())
     return any(w.lower() in labels for w in whitelist)
+
+
+def _title_matches(event: dict, keywords: list[str]) -> bool:
+    title = (event.get("title") or "").lower()
+    return any(kw.lower() in title for kw in keywords)
 
 
 def _get_liquidity(event: dict) -> float:
