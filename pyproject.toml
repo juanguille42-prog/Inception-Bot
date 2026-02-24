@@ -1,0 +1,28 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "polynotify"
+version = "0.1.0"
+description = "Polymarket crypto market notification bot"
+requires-python = ">=3.12"
+dependencies = [
+    "httpx>=0.27",
+    "aiogram>=3.4",
+    "twilio>=9.0",
+    "structlog>=24.1",
+]
+
+[project.scripts]
+polynotify = "polynotify.main:cli"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/polynotify"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+[dependency-groups]
+dev = ["pytest>=8.0", "pytest-asyncio>=0.24", "respx>=0.22"]

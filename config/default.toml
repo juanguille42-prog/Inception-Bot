@@ -1,0 +1,27 @@
+[general]
+poll_interval_sec = 60
+db_path = "data/seen.db"
+log_level = "info"
+
+[gamma]
+base_url = "https://gamma-api.polymarket.com"
+tag_id = 21
+fetch_limit = 100
+include_recurring = false
+min_liquidity = 0
+tag_whitelist = []
+
+[alerts]
+closing_alert_hours = 2.0
+price_threshold = 0.15
+price_lookback_minutes = 60
+price_cooldown_minutes = 30
+volume_spike_multiplier = 3.0
+volume_lookback_minutes = 60
+volume_cooldown_minutes = 60
+
+[telegram]
+enabled = false
+
+[whatsapp]
+enabled = false
