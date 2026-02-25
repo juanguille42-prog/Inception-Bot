@@ -23,7 +23,7 @@ volume_lookback_minutes = 60
 volume_cooldown_minutes = 60
 
 [telegram]
-enabled = false
+enabled = true
 
 [whatsapp]
 enabled = false
