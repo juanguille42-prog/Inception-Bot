@@ -14,6 +14,7 @@ title_keywords = ["hit $", "above $", "below $", "market cap", "FDV", "price of"
 
 [alerts]
 enabled_alerts = ["new_market"]
+new_market_max_age_hours = 24.0
 closing_alert_hours = 2.0
 price_threshold = 0.15
 price_lookback_minutes = 60

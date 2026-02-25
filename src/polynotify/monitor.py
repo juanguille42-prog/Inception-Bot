@@ -152,6 +152,18 @@ class Monitor:
         self._store.mark_seen(event_id)
         if is_first_run:
             return None  # Backfill — don't notify
+        # Skip markets created more than max_age_hours ago
+        max_age = self._cfg.alerts.new_market_max_age_hours
+        created_at_str = event.get("createdAt")
+        if created_at_str and max_age > 0:
+            try:
+                created_at = datetime.fromisoformat(created_at_str.replace("Z", "+00:00"))
+                age_hours = (datetime.now(timezone.utc) - created_at).total_seconds() / 3600
+                if age_hours > max_age:
+                    log.debug("new_market_too_old", event_id=event_id, age_hours=round(age_hours, 1))
+                    return None
+            except (ValueError, TypeError):
+                pass
         return Alert(type="new_market", event=event)
 
     def _check_closing_soon(self, event: dict) -> Alert | None:

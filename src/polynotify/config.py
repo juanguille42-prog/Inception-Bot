@@ -25,6 +25,7 @@ _ALL_ALERT_TYPES = ["new_market", "closing_soon", "resolved", "price_move", "vol
 @dataclass
 class AlertsConfig:
     enabled_alerts: list[str] = field(default_factory=lambda: list(_ALL_ALERT_TYPES))
+    new_market_max_age_hours: float = 24.0
     closing_alert_hours: float = 2.0
     price_threshold: float = 0.15
     price_lookback_minutes: int = 60
